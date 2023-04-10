@@ -183,7 +183,7 @@ def main_loop():
     global serial_port
     recent_velocity = 0.0
     prior_velocity = 0.0
-
+    b_excesovelocidad=False
     # main loop to the program
     while True:
         # Flush serial buffers

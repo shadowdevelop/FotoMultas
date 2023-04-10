@@ -28,10 +28,10 @@ def enviarmensaje(mensaje):
     except:
         print("error monitor")
         
-def enviarcorreo(correo,clave,destinatario,ipcamara,velocidad):    
+def enviarcorreo(correoat,claveat,destinatario,ipcamara,velocidad):    
     now=datetime.datetime.now()
     formatted_now=now.strftime("%Y-%m-%d_%H-%M-%S")
-    correo=EmailSender("angel.roacho@gmail.com","yovuwtocegxorsmf","angel_m84@hotmail.com")
+    correo=EmailSender(correoat,claveat,destinatario)
     correo.set_asunto("Evidencia de exceso de velocidad")
     imagen=tomarfoto(ipcamara,formatted_now)
     if imagen !=None:
@@ -43,9 +43,10 @@ def enviarcorreo(correo,clave,destinatario,ipcamara,velocidad):
             os.remove(imagen)
     
 def tomarfoto(ipcamara,fecha)->str:
+    os.environ['OPENCV_FFMPEG_CAPTURE_OPTIONS']='rtsp_transport;udp'
     archivo=None
-    cap=cv2.VideoCapture(ipcamara)
-    if not cap.idOpened():
+    cap=cv2.VideoCapture(ipcamara,cv2.CAP_FFMPEG)
+    if not cap.isOpened():
         return
     
     ret ,frame=cap.read()
