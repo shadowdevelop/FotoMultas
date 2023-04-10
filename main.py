@@ -185,6 +185,7 @@ def main_loop():
     prior_velocity = 0.0
     b_excesovelocidad=False
     limitekmsetting=float(settings.get('limitkm','8'))
+    print('variables',settings.getConfig())
     # main loop to the program
     while True:
         # Flush serial buffers
