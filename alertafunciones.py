@@ -33,16 +33,16 @@ def enviarcorreo(correoat,claveat,destinatario,ipcamara,velocidad):
     formatted_now=now.strftime("%Y-%m-%d_%H-%M-%S")
     correo=EmailSender(correoat,claveat,destinatario)
     correo.set_asunto("Evidencia de exceso de velocidad")
-    imagen=tomarfoto(ipcamara,formatted_now)
+    imagen=tomarfoto(ipcamara,formatted_now,velocidad)
     if imagen !=None:
         correo.adjuntar_imagen(imagen)
-    correo.set_cuerpo("Se detecto un exceso de velocidad a las {formatted_now}")
+    correo.set_cuerpo("Se detecto un exceso de velocidad a las " + formatted_now)
     correo.enviar()
     if imagen !=None:
         if (os.path.exists(imagen)):
             os.remove(imagen)
     
-def tomarfoto(ipcamara,fecha)->str:
+def tomarfoto(ipcamara,fecha,velocidad)->str:
     os.environ['OPENCV_FFMPEG_CAPTURE_OPTIONS']='rtsp_transport;udp'
     archivo=None
     cap=cv2.VideoCapture(ipcamara,cv2.CAP_FFMPEG)
@@ -52,6 +52,13 @@ def tomarfoto(ipcamara,fecha)->str:
     ret ,frame=cap.read()
     
     if ret:       
+        font = cv2.FONT_HERSHEY_SIMPLEX
+        text= fecha + ':' +  velocidad + "KM/H"
+        position = (50,50)
+        fontscale=1
+        color=(0,255,0)
+        thickness=2
+        cv2.putText(frame,text,position,font,fontscale,color,thickness)
         archivo= f"captured_image_{fecha}.jpg"
         cv2.imwrite(archivo,frame)
         
