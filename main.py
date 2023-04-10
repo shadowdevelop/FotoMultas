@@ -184,6 +184,7 @@ def main_loop():
     recent_velocity = 0.0
     prior_velocity = 0.0
     b_excesovelocidad=False
+    limitekmsetting=float(settings.get('limitkm','8'))
     # main loop to the program
     while True:
         # Flush serial buffers
@@ -249,7 +250,7 @@ def main_loop():
             recent_velocity = velocity
             velocidadkm=recent_velocity/27.78
             print("velocidad " , velocidadkm)
-            if (velocidadkm>8.0):
+            if (velocidadkm>limitekmsetting):
                 print("mayor")
                 if b_excesovelocidad==False:
                     alertafunciones.enviarcorreo(settings.get('correo','angel.roacho@gmail.com'),settings.get('clave','yovuwtocegxorsmf'),settings.get('mailto','angel_m84@htomail.com'),settings.get('ipcamara','127.0.0.1'),velocidadkm)
