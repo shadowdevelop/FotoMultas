@@ -53,7 +53,8 @@ def tomarfoto(ipcamara,fecha,velocidad)->str:
     
     if ret:       
         font = cv2.FONT_HERSHEY_SIMPLEX
-        text= fecha + ':' +  f{'velocidad:2f'} + "KM/H"
+        
+        text= fecha + ':' +  f'{velocidad:2f}' + "KM/H"
         position = (50,50)
         fontscale=1
         color=(0,255,0)
