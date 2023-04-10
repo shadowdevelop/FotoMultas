@@ -36,7 +36,7 @@ def enviarcorreo(correoat,claveat,destinatario,ipcamara,velocidad):
     imagen=tomarfoto(ipcamara,formatted_now,velocidad)
     if imagen !=None:
         correo.adjuntar_imagen(imagen)
-    correo.set_cuerpo("Se detecto un exceso de velocidad a las " + formatted_now)
+    correo.set_cuerpo("Se detecto un exceso de velocidad a las " + str(formatted_now))
     correo.enviar()
     if imagen !=None:
         if (os.path.exists(imagen)):
@@ -53,7 +53,7 @@ def tomarfoto(ipcamara,fecha,velocidad)->str:
     
     if ret:       
         font = cv2.FONT_HERSHEY_SIMPLEX
-        text= fecha + ':' +  velocidad + "KM/H"
+        text= fecha + ':' +  str(velocidad) + "KM/H"
         position = (50,50)
         fontscale=1
         color=(0,255,0)
