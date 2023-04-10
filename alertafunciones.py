@@ -29,42 +29,47 @@ def enviarmensaje(mensaje):
         print("error monitor")
         
 def enviarcorreo(correoat,claveat,destinatario,ipcamara,velocidad):    
-    now=datetime.datetime.now()
-    formatted_now=now.strftime("%Y-%m-%d_%H-%M-%S")
-    correo=EmailSender(correoat,claveat,destinatario)
-    correo.set_asunto("Evidencia de exceso de velocidad")
-    imagen=tomarfoto(ipcamara,formatted_now,velocidad)
-    if imagen !=None:
-        correo.adjuntar_imagen(imagen)
-    correo.set_cuerpo("Se detecto un exceso de velocidad a las " + str(formatted_now))
-    correo.enviar()
-    if imagen !=None:
-        if (os.path.exists(imagen)):
-            os.remove(imagen)
+    try:
+        now=datetime.datetime.now()
+        formatted_now=now.strftime("%Y-%m-%d_%H-%M-%S")
+        correo=EmailSender(correoat,claveat,destinatario)
+        correo.set_asunto("Evidencia de exceso de velocidad")
+        imagen=tomarfoto(ipcamara,formatted_now,velocidad)
+        if imagen !=None:
+            correo.adjuntar_imagen(imagen)
+        correo.set_cuerpo("Se detecto un exceso de velocidad a las " + str(formatted_now))
+        correo.enviar()
+        if imagen !=None:
+            if (os.path.exists(imagen)):
+                os.remove(imagen)
+    except:
+        print("error monitor")
     
 def tomarfoto(ipcamara,fecha,velocidad)->str:
-    os.environ['OPENCV_FFMPEG_CAPTURE_OPTIONS']='rtsp_transport;udp'
     archivo=None
-    cap=cv2.VideoCapture(ipcamara,cv2.CAP_FFMPEG)
-    if not cap.isOpened():
-        return
-    
-    ret ,frame=cap.read()
-    
-    if ret:       
-        font = cv2.FONT_HERSHEY_SIMPLEX
+    try:
+        os.environ['OPENCV_FFMPEG_CAPTURE_OPTIONS']='rtsp_transport;udp'        
+        cap=cv2.VideoCapture(ipcamara,cv2.CAP_FFMPEG)
+        if not cap.isOpened():
+            return
         
-        text= fecha + ' : ' +  f'{velocidad:.2f}' + " KM/H"
-        position = (50,50)
-        fontscale=1
-        color=(0,255,0)
-        thickness=2
-        cv2.putText(frame,text,position,font,fontscale,color,thickness)
-        archivo= f"captured_image_{fecha}.jpg"
-        cv2.imwrite(archivo,frame)
+        ret ,frame=cap.read()
         
-    cap.release()
-    
+        if ret:       
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            
+            text= fecha + ' : ' +  f'{velocidad:.2f}' + " KM/H"
+            position = (50,50)
+            fontscale=1
+            color=(0,255,0)
+            thickness=2
+            cv2.putText(frame,text,position,font,fontscale,color,thickness)
+            archivo= f"captured_image_{fecha}.jpg"
+            cv2.imwrite(archivo,frame)
+            
+        cap.release()
+    except:
+        print("error monitor")
     return archivo
        
     

@@ -22,8 +22,11 @@ class EmailSender:
             self.mensaje.attach(imagen)
     
     def enviar(self):
-        servidor=smtplib.SMTP_SSL('smtp.gmail.com',465)
-        #servidor.starttls()
-        servidor.login(self.remite,self.clave)
-        servidor.sendmail(self.remite,self.destinatario,self.mensaje.as_string())
-        servidor.quit()
+        try:
+            servidor=smtplib.SMTP_SSL('smtp.gmail.com',465)
+            #servidor.starttls()
+            servidor.login(self.remite,self.clave)
+            servidor.sendmail(self.remite,self.destinatario,self.mensaje.as_string())
+            servidor.quit()
+        except:
+            print("error monitor")
