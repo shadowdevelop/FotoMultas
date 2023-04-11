@@ -263,6 +263,7 @@ def main_loop():
                     b_excesovelocidad=True
                     f_excesovelocidad=datetime.datetime.now()
                 else:
+                    alertafunciones.enviarmensaje(str(velocidadkm) + "|1")
                     segundospasados=datetime.datetime.now()-f_excesovelocidad
                     if segundospasados.total_seconds()>20:
                         b_excesovelocidad=False
