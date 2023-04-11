@@ -1,30 +1,34 @@
-import requests
-from datetime import datetime
+import sys
+os = sys.platform
+print("Current OS: ", os)
 
-def capture_image_from_ip_camera(url, username, password, output_file):
-    # Realiza una solicitud HTTP para obtener la imagen de la cámara IP
-    response = requests.get(url, auth=(username, password))
+# import requests
+# from datetime import datetime
 
-    # Verifica si la respuesta fue exitosa
-    if response.status_code == 200:
-        # Guarda la imagen en un archivo
-        with open(output_file, 'wb') as f:
-            f.write(response.content)
-        print(f"Imagen guardada en {output_file}")
-    else:
-        print(f"Error al obtener la imagen: {response.status_code}")
+# def capture_image_from_ip_camera(url, username, password, output_file):
+#     # Realiza una solicitud HTTP para obtener la imagen de la cámara IP
+#     response = requests.get(url, auth=(username, password))
 
-# Reemplaza los siguientes valores con la información de tu cámara IP
-ip_camera_url = "rtsp://192.168.1.54:554/Streaming/Channels/101"  #rtsp://admin:PA$$w0rd@192.168.1.54:554/Streaming/Channels/101
-username = "admin"
-password = "PA$$w0rd"
+#     # Verifica si la respuesta fue exitosa
+#     if response.status_code == 200:
+#         # Guarda la imagen en un archivo
+#         with open(output_file, 'wb') as f:
+#             f.write(response.content)
+#         print(f"Imagen guardada en {output_file}")
+#     else:
+#         print(f"Error al obtener la imagen: {response.status_code}")
 
-# Genera un nombre de archivo con la fecha y hora actuales
-current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
-output_file = f"image_{current_time}.jpg"
+# # Reemplaza los siguientes valores con la información de tu cámara IP
+# ip_camera_url = "rtsp://192.168.1.54:554/Streaming/Channels/101"  #rtsp://admin:PA$$w0rd@192.168.1.54:554/Streaming/Channels/101
+# username = "admin"
+# password = "PA$$w0rd"
 
-# Captura la imagen de la cámara IP
-capture_image_from_ip_camera(ip_camera_url, username, password, output_file)
+# # Genera un nombre de archivo con la fecha y hora actuales
+# current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+# output_file = f"image_{current_time}.jpg"
+
+# # Captura la imagen de la cámara IP
+# capture_image_from_ip_camera(ip_camera_url, username, password, output_file)
 
 # from mailfunciones import EmailSender
 

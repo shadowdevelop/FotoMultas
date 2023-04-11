@@ -4,7 +4,6 @@
 #
 import os
 import sys
-from sys import plataform
 import time
 import serial
 import radar_actions
@@ -13,7 +12,7 @@ import time
 import datetime
 import alertafunciones
 from configdb import configdb
-if plataform=="linux" or plataform=="linux2":
+if sys.platform=="linux" or sys.platform=="linux2":
     os.chdir('/home/roacho/fotomultasinstall/fotomultas')
 
 
