@@ -275,7 +275,7 @@ def main_loop():
                 if b_excesovelocidad==False:
                     segundospasados=datetime.datetime.now()-f_velocidadlectura
                     if segundospasados.total_seconds()>5:   
-                        segundospasados=datetime.datetime.now()             
+                        f_velocidadlectura=datetime.datetime.now()             
                         alertafunciones.enviarmensaje(str(velocidadkm) + "|0")
                 else:
                     segundospasados=datetime.datetime.now()-f_excesovelocidad
