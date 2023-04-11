@@ -7,7 +7,7 @@ class EmailSender:
     def __init__(self,remite,clave,destinatario) -> None:
         self.remite=remite
         self.clave=clave
-        self.destinatario=destinatario
+        self.destinatario=destinatario.split(";")
         self.mensaje=MIMEMultipart()
         
     def set_asunto(self,asunto:str)->None:
