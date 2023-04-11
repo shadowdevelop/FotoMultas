@@ -2,7 +2,9 @@
 #####################################################
 # Import time, decimal, serial, reg expr, sys
 #
+import os
 import sys
+from sys import plataform
 import time
 import serial
 import radar_actions
@@ -11,6 +13,9 @@ import time
 import datetime
 import alertafunciones
 from configdb import configdb
+if plataform=="linux" or plataform=="linux2":
+    os.chdir('/home/roacho/fotomultasinstall/fotomultas')
+
 
 logging.basicConfig(stream=sys.stderr, level=logging.WARN)
 logging.debug('Welcome to ops_radar')
