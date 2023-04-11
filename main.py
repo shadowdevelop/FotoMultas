@@ -268,18 +268,18 @@ def main_loop():
                 else:
                     #alertafunciones.enviarmensaje(str(velocidadkm) + "|1")
                     segundospasados=datetime.datetime.now()-f_excesovelocidad
-                    if segundospasados.total_seconds()>20:
+                    if segundospasados.total_seconds()>7:
                         b_excesovelocidad=False
 
             else:
                 if b_excesovelocidad==False:
                     segundospasados=datetime.datetime.now()-f_velocidadlectura
-                    if segundospasados.total_seconds()>5:   
+                    if segundospasados.total_seconds()>2:   
                         f_velocidadlectura=datetime.datetime.now()             
                         alertafunciones.enviarmensaje(str(velocidadkm) + "|0")
                 else:
                     segundospasados=datetime.datetime.now()-f_excesovelocidad
-                    if segundospasados.total_seconds()>20:
+                    if segundospasados.total_seconds()>7:
                         b_excesovelocidad=False
 
             logging.debug(f'analyze received speed:{abs(recent_velocity)}')
