@@ -189,6 +189,8 @@ def main_loop():
     prior_velocity = 0.0
     b_excesovelocidad=False
     limitekmsetting=float(settings.get('limitkm','8'))
+    f_excesovelocidad=datetime.datetime.now()
+    f_velocidadlectura=datetime.datetime.now()
     print('variables',settings)
     # main loop to the program
     while True:
@@ -255,6 +257,7 @@ def main_loop():
             recent_velocity = velocity
             velocidadkm=recent_velocity/27.78
             print("velocidad " , velocidadkm)
+            
             if (velocidadkm>limitekmsetting):
                 print("mayor")
                 if b_excesovelocidad==False:
@@ -263,13 +266,21 @@ def main_loop():
                     b_excesovelocidad=True
                     f_excesovelocidad=datetime.datetime.now()
                 else:
-                    alertafunciones.enviarmensaje(str(velocidadkm) + "|1")
+                    #alertafunciones.enviarmensaje(str(velocidadkm) + "|1")
                     segundospasados=datetime.datetime.now()-f_excesovelocidad
                     if segundospasados.total_seconds()>20:
                         b_excesovelocidad=False
 
             else:
-                alertafunciones.enviarmensaje(str(velocidadkm) + "|0")
+                if b_excesovelocidad==False:
+                    segundospasados=datetime.datetime.now()-f_velocidadlectura
+                    if segundospasados.total_seconds()>5:   
+                        segundospasados=datetime.datetime.now()             
+                        alertafunciones.enviarmensaje(str(velocidadkm) + "|0")
+                else:
+                    segundospasados=datetime.datetime.now()-f_excesovelocidad
+                    if segundospasados.total_seconds()>20:
+                        b_excesovelocidad=False
 
             logging.debug(f'analyze received speed:{abs(recent_velocity)}')
             tracking_current_time = time.time()
