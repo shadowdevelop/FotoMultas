@@ -260,26 +260,26 @@ def main_loop():
             
             if (velocidadkm>limitekmsetting):
                 print("mayor")
-                if b_excesovelocidad==False:
-                    alertafunciones.enviarcorreo(settings.get('correo','angel.roacho@gmail.com'),settings.get('clave','yovuwtocegxorsmf'),settings.get('mailto','angel_m84@htomail.com'),settings.get('ipcamara','127.0.0.1'),velocidadkm)
+                if b_excesovelocidad==False:                    
                     alertafunciones.enviarmensaje(str(velocidadkm) + "|1")
+                    alertafunciones.enviarcorreo(settings.get('correo','angel.roacho@gmail.com'),settings.get('clave','yovuwtocegxorsmf'),settings.get('mailto','angel_m84@htomail.com'),settings.get('ipcamara','127.0.0.1'),velocidadkm)
                     b_excesovelocidad=True
                     f_excesovelocidad=datetime.datetime.now()
                 else:
                     #alertafunciones.enviarmensaje(str(velocidadkm) + "|1")
                     segundospasados=datetime.datetime.now()-f_excesovelocidad
-                    if segundospasados.total_seconds()>7:
+                    if segundospasados.total_seconds()>3:
                         b_excesovelocidad=False
 
             else:
                 if b_excesovelocidad==False:
                     segundospasados=datetime.datetime.now()-f_velocidadlectura
-                    if segundospasados.total_seconds()>2:   
+                    if segundospasados.total_seconds()>2:    
                         f_velocidadlectura=datetime.datetime.now()             
                         alertafunciones.enviarmensaje(str(velocidadkm) + "|0")
                 else:
                     segundospasados=datetime.datetime.now()-f_excesovelocidad
-                    if segundospasados.total_seconds()>7:
+                    if segundospasados.total_seconds()>3:
                         b_excesovelocidad=False
 
             logging.debug(f'analyze received speed:{abs(recent_velocity)}')
