@@ -261,12 +261,14 @@ def main_loop():
             
             if (velocidadkm>limitekmsetting):
                 print("mayor")
-                if b_excesovelocidad==False:                    
+                if b_excesovelocidad==False:   
+                    print (datetime.datetime.now())              
                     alertafunciones.enviarmensaje(str(velocidadkm) + "|1")
                     #alertafunciones.enviarcorreo(settings.get('correo','angel.roacho@gmail.com'),settings.get('clave','yovuwtocegxorsmf'),settings.get('mailto','angel_m84@htomail.com'),settings.get('ipcamara','127.0.0.1'),velocidadkm)
                     threading.Thread(target=alertafunciones.enviarcorreo, args=(settings.get('correo','angel.roacho@gmail.com'),settings.get('clave','yovuwtocegxorsmf'),settings.get('mailto','angel_m84@htomail.com'),settings.get('ipcamara','127.0.0.1'),velocidadkm)).start()
                     b_excesovelocidad=True
                     f_excesovelocidad=datetime.datetime.now()
+                    print (datetime.datetime.now())              
                 else:
                     #alertafunciones.enviarmensaje(str(velocidadkm) + "|1")
                     segundospasados=datetime.datetime.now()-f_excesovelocidad
