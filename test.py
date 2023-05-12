@@ -1,3 +1,5 @@
+from time import sleep
+import datetime
 import sys
 os = sys.platform
 print("Current OS: ", os)
@@ -70,3 +72,18 @@ print("Current OS: ", os)
 # print(config.get("limitkm"))
 # config.update("limitkm","80")
 # print(config.all())
+
+
+f_excesovelocidad=datetime.datetime.now()
+
+
+
+sleep(3.4)
+
+
+segundospasados=datetime.datetime.now()-f_excesovelocidad
+
+
+print (segundospasados.total_seconds())
+
+print (segundospasados)
