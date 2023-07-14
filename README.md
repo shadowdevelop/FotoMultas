@@ -28,6 +28,6 @@ raspberry
 	
 	
 	
+	https://github.com/shadowdevelop/FotoMultas
 	
-	
-	
+	https://github.com/shadowdevelop/fotomultaconfig
