@@ -154,6 +154,13 @@ def main_init():
     serial_port.open()
     serial_port.flushInput()
     serial_port.flushOutput()
+    
+    VelUnit = settings.get('VelUnit','km')
+    
+    if (VelUnit=="km"):
+        OPS24X_UNITS_PREF=="UK"
+    else:
+        OPS24X_UNITS_PREF=="US"
 
     # Initialize and query Ops24x Module
     logging.info("Initializing Ops24x Module")
@@ -190,6 +197,14 @@ def main_loop():
     prior_velocity = 0.0
     b_excesovelocidad=False
     limitekmsetting=float(settings.get('limitkm','8'))
+    horasajuste=float(settings.get('horasajuste','0'))
+    imgprefix=settings.get('imgprefix','')
+    guardarreporte=settings.get('reporte','')
+    VelUnit=settings.get('VelUnit','km')
+    medidavelocidad="MPH"
+    if (VelUnit=="km"):
+        medidavelocidad="KM/H"
+    
     f_excesovelocidad=datetime.datetime.now()
     f_velocidadlectura=datetime.datetime.now()
     print('variables',settings)
@@ -255,8 +270,9 @@ def main_loop():
             if velocity is None:
                 continue
 
-            recent_velocity = velocity
-            velocidadkm=recent_velocity/27.78
+            # recent_velocity = velocity
+            # velocidadkm=recent_velocity/27.78
+            velocidadkm=velocity
             print("velocidad " , velocidadkm)
             
             if (velocidadkm>limitekmsetting):
@@ -265,7 +281,7 @@ def main_loop():
                     print (datetime.datetime.now())              
                     alertafunciones.enviarmensaje(str(velocidadkm) + "|1")
                     #alertafunciones.enviarcorreo(settings.get('correo','angel.roacho@gmail.com'),settings.get('clave','yovuwtocegxorsmf'),settings.get('mailto','angel_m84@htomail.com'),settings.get('ipcamara','127.0.0.1'),velocidadkm)
-                    threading.Thread(target=alertafunciones.enviarcorreo, args=(settings.get('correo','angel.roacho@gmail.com'),settings.get('clave','yovuwtocegxorsmf'),settings.get('mailto','angel_m84@htomail.com'),settings.get('ipcamara','127.0.0.1'),velocidadkm)).start()
+                    threading.Thread(target=alertafunciones.enviarcorreo, args=(settings.get('correo','angel.roacho@gmail.com'),settings.get('clave','yovuwtocegxorsmf'),settings.get('mailto','angel_m84@htomail.com'),settings.get('ipcamara','127.0.0.1'),velocidadkm,horasajuste,imgprefix,guardarreporte,medidavelocidad)).start()
                     b_excesovelocidad=True
                     f_excesovelocidad=datetime.datetime.now()
                     print (datetime.datetime.now())              
