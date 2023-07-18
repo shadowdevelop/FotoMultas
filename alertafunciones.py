@@ -64,8 +64,8 @@ def tomarfoto(ipcamara,fecha,velocidad,prefix,guardarimg,medidavelocidad)->str:
             
             text= prefix + ' ' + fecha + ' : ' +  f'{velocidad:.2f}' + " " + medidavelocidad
             position = (50,50)
-            fontscale=1
-            color=(0,255,0)
+            fontscale=2
+            color=(0,0,153)
             thickness=2
             cv2.putText(frame,text,position,font,fontscale,color,thickness)
             archivo= f"{prefix}captured_image_{fecha}.jpg"
