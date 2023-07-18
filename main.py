@@ -102,20 +102,42 @@ def read_velocity():
         Negative speed -> object moving away from sensor
         None -> something else was received (blank line, command reply, etc)
     """
+    
     global serial_port
     object_velocity = 0.0
     ops24x_rx_bytes = serial_port.readline()
     ops24x_rx_bytes_length = len(ops24x_rx_bytes)
+    tipos=['"mph"','"kmph"','"cmps"']
     # a case can be made that if the length is 0, it's a newline char so try again
     if ops24x_rx_bytes_length != 0:
-        ops24x_rx_str = str(ops24x_rx_bytes)
-        if ops24x_rx_str.find('{') == -1:  # really, { would only be found in first char
-            try:
-                # Speed data found (maybe)
-                object_velocity = float(ops24x_rx_bytes)
-                return object_velocity
-            except ValueError:  # well just toss this line out
-                return None
+        ops24x_rx_str = str.rstrip(str(ops24x_rx_bytes.decode('utf-8', 'strict')))# str(ops24x_rx_bytes)
+        #print("lectura: ",ops24x_rx_str," bytes ",ops24x_rx_bytes)
+        if ops24x_rx_str.find('{') == -1:  # really, { would only be found in first char            
+            if (ops24x_rx_str.find(',')==-1):
+                try:
+                    # Speed data found (maybe)
+                    object_velocity = float(ops24x_rx_bytes)                
+                    return object_velocity
+                except ValueError:  # well just toss this line out
+                    # print('no puedo convertir')
+                    return None
+            else:
+                try:
+                    valuearray=ops24x_rx_str.split(',')
+                    if (len(valuearray)==2):
+                        object_velocity = float(valuearray[1])     
+                        if str(valuearray[0]) in tipos:
+                            object_velocity = float(valuearray[1])     
+                            # print ("velocidad posible : ",object_velocity)           
+                            return object_velocity
+                        else:
+                            # print("no esta en array" , valuearray[0], " arrreglo ",tipos)
+                            return None                        
+                    else:
+                        return None
+                except ValueError:
+                    return None
+            
     return None
 
 
@@ -157,10 +179,10 @@ def main_init():
     
     VelUnit = settings.get('VelUnit','km')
     
-    if (VelUnit=="km"):
-        OPS24X_UNITS_PREF=="UK"
-    else:
-        OPS24X_UNITS_PREF=="US"
+    # if (VelUnit=="km"):
+    #     OPS24X_UNITS_PREF=="UK"
+    # else:
+    #     OPS24X_UNITS_PREF=="US"
 
     # Initialize and query Ops24x Module
     logging.info("Initializing Ops24x Module")
@@ -270,10 +292,10 @@ def main_loop():
             if velocity is None:
                 continue
 
-            # recent_velocity = velocity
-            # velocidadkm=recent_velocity/27.78
-            velocidadkm=velocity
-            print("velocidad " , velocidadkm)
+            recent_velocity = velocity
+            velocidadkm=recent_velocity/27.78
+            #velocidadkm=velocity
+            print("velocidad " , velocidadkm, " velocidad real ", velocity)
             
             if (velocidadkm>limitekmsetting):
                 print("mayor")
