@@ -71,7 +71,8 @@ def tomarfoto(ipcamara,fecha,velocidad,prefix,guardarimg,medidavelocidad)->str:
             archivo= f"{prefix}_captured_image_{fecha}.jpg"
             cv2.imwrite(archivo,frame)
             if guardarimg==1:
-                cv2.imwrite('./reporte/' + archivo,frame)
+                archivo2= f"{prefix}_{fecha}.jpg"
+                cv2.imwrite('./reporte/' + archivo2,frame)
                 #guardarfoto(archivo,fecha,velocidad)
         cap.release()
     except:
