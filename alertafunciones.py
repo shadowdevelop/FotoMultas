@@ -68,7 +68,7 @@ def tomarfoto(ipcamara,fecha,velocidad,prefix,guardarimg,medidavelocidad)->str:
             color=(255,255,255)
             thickness=3
             cv2.putText(frame,text,position,font,fontscale,color,thickness)
-            archivo= f"{prefix}captured_image_{fecha}.jpg"
+            archivo= f"{prefix}_captured_image_{fecha}.jpg"
             cv2.imwrite(archivo,frame)
             if guardarimg==1:
                 cv2.imwrite('./reporte/' + archivo,frame)
