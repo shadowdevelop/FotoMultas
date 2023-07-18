@@ -220,7 +220,7 @@ def main_loop():
     b_excesovelocidad=False
     limitekmsetting=float(settings.get('limitkm','8'))
     horasajuste=float(settings.get('horasajuste','0'))
-    imgprefix=settings.get('imgprefix','')
+    imgprefix=settings.get('equipo','FM001')
     guardarreporte=settings.get('reporte','')
     VelUnit=settings.get('VelUnit','km')
     medidavelocidad="MPH"
