@@ -6,16 +6,16 @@ class reportdb:
         self.con=sqlite3.connect("reporte.db")
         
     def get(self,id):
-        res=self.con.execute("select id,fecha,velocidad,archivo from reporte where id='" + id + "'")
+        res=self.con.execute("select idx,fecha,velocidad,archivo,equipo from reporte where id='" + id + "'")
         return res.fetchone()
     
     def all(self):
-        res=self.con.execute("select id,fecha,velocidad,archivo from reporte ")
+        res=self.con.execute("select idx,fecha,velocidad,archivo,equipo from reporte ")
         return res.fetchall()
     
     
-    def insert(self,fecha,veloccidad,archivo):
-        self.con.execute("insert into reporte values('"+fecha+"','"+veloccidad+"','"+archivo+"')")
+    def insert(self,veloccidad,archivo,equipo):
+        self.con.execute("insert into reporte(velocidad,archivo,equipo) values('"+veloccidad+"','"+archivo+"','"+equipo+"')")
         self.con.commit()
         
     def clear(self):

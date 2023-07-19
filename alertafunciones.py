@@ -49,7 +49,7 @@ def enviarcorreo(correoat,claveat,destinatario,ipcamara,velocidad,ajustehora,img
     except:
         print("error monitor")
     
-def tomarfoto(ipcamara,fecha,velocidad,prefix,guardarimg,medidavelocidad)->str:
+def tomarfoto(ipcamara,fecha,velocidad,equipo,guardarimg,medidavelocidad)->str:
     archivo=None
     try:
         os.environ['OPENCV_FFMPEG_CAPTURE_OPTIONS']='rtsp_transport;udp'        
@@ -62,17 +62,22 @@ def tomarfoto(ipcamara,fecha,velocidad,prefix,guardarimg,medidavelocidad)->str:
         if ret:       
             font = cv2.FONT_HERSHEY_SIMPLEX
             
-            text= prefix + ' ' + fecha + ' : ' +  f'{velocidad:.2f}' + " " + medidavelocidad
+            text= equipo + ' ' + fecha + ' : ' +  f'{velocidad:.2f}' + " " + medidavelocidad
             position = (50,100)
             fontscale=2
             color=(255,255,255)
             thickness=3
             cv2.putText(frame,text,position,font,fontscale,color,thickness)
-            archivo= f"{prefix}_captured_image_{fecha}.jpg"
+            archivo= f"{equipo}_captured_image_{fecha}.jpg"
             cv2.imwrite(archivo,frame)
-            if guardarimg==1:
-                archivo2= f"{prefix}_{fecha}.jpg"
+            if guardarimg=="1":
+                archivo2= f"{equipo}_{fecha}.jpg"
                 cv2.imwrite('./reporte/' + archivo2,frame)
+                try:
+                    db=reportdb()
+                    db.insert(velocidad,archivo2,equipo)
+                except:
+                    pass
                 #guardarfoto(archivo,fecha,velocidad)
         cap.release()
     except:
