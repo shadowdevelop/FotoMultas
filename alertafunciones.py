@@ -10,7 +10,20 @@ from reportedb import reportdb
 
 from datetime import datetime,timedelta
 
-def enviarmensaje(mensaje):
+def enviarcorreoerror(correoat,claveat,destinatario,error,logger):
+    try:
+        
+        correo=EmailSender(correoat,claveat,destinatario)
+        correo.set_asunto("Error de sensor de velocidad")
+        
+        
+        correo.set_cuerpo("Se detecto un problema con el sensor : " + error)
+        correo.enviar()      
+    except Exception as ex:
+        logger.error("enviarcorreoerror : " + str(ex))        
+        
+
+def enviarmensaje(mensaje,logger):
     try:
         serial_mensaje = serial.Serial() 
         serial_mensaje = serial.Serial(
@@ -29,9 +42,10 @@ def enviarmensaje(mensaje):
 
         serial_mensaje.write(str.encode(mensaje))
     except:
+        logger.error("Monitor no encontrado")
         print("error monitor")
         
-def enviarcorreo(correoat,claveat,destinatario,ipcamara,velocidad,ajustehora,imgprefix,guardarimg,medidavel):    
+def enviarcorreo(correoat,claveat,destinatario,ipcamara,velocidad,ajustehora,imgprefix,guardarimg,medidavel,logger):    
     try:
         now=datetime.now()
         now=now + timedelta(hours=ajustehora)
@@ -46,10 +60,11 @@ def enviarcorreo(correoat,claveat,destinatario,ipcamara,velocidad,ajustehora,img
         if imagen !=None:
             if (os.path.exists(imagen)):
                 os.remove(imagen)
-    except:
+    except Exception as ex:
+        logger.error("enviarcorreo : " + str(ex))   
         print("error monitor")
     
-def tomarfoto(ipcamara,fecha,velocidad,equipo,guardarimg,medidavelocidad)->str:
+def tomarfoto(ipcamara,fecha,velocidad,equipo,guardarimg,medidavelocidad,logger)->str:
     archivo=None
     try:
         os.environ['OPENCV_FFMPEG_CAPTURE_OPTIONS']='rtsp_transport;udp'        
@@ -80,7 +95,8 @@ def tomarfoto(ipcamara,fecha,velocidad,equipo,guardarimg,medidavelocidad)->str:
                     pass
                 #guardarfoto(archivo,fecha,velocidad)
         cap.release()
-    except:
+    except Exception as ex:
+        logger.error("tomarfoto : " + str(ex)) 
         print("error monitor")
     return archivo
        

@@ -40,3 +40,22 @@ https://www.youtube.com/watch?v=QzVYnG-WaM4
 version of cv2 == 4.7.0.72
 
 
+dar permisos de ejecucion a los archivo .sh
+chmod +x archivo
+
+
+
+
+git
+
+bajar cambios por archivo
+git fetch
+git checkout archivo
+
+
+limpiar cambios locales y descargar todo
+git reset –hard
+git clean -fxd
+git pull
+
+

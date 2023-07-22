@@ -8,6 +8,7 @@ import time
 import serial
 import radar_actions
 import logging
+from logging.handlers import TimedRotatingFileHandler
 import time
 import datetime
 import alertafunciones
@@ -15,6 +16,16 @@ import threading
 from configdb import configdb
 if sys.platform=="linux" or sys.platform=="linux2":
     os.chdir('/home/roacho/fotomultasinstall/fotomultas')
+
+
+logger = logging.getLogger('FotoMultaLog')
+logger.setLevel(logging.ERROR)
+fh = TimedRotatingFileHandler('logs/FotomultaLog.log', when='midnight', interval=1, backupCount=7)
+fh.setLevel(logging.ERROR)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+fh.setFormatter(formatter)
+logger.addHandler(fh)
+
 
 
 logging.basicConfig(stream=sys.stderr, level=logging.WARN)
@@ -132,6 +143,7 @@ def read_velocity():
                             return object_velocity
                         else:
                             # print("no esta en array" , valuearray[0], " arrreglo ",tipos)
+                            logger.error("read_velocity : Formato incorrecto (" + ops24x_rx_str + ")")
                             return None                        
                     else:
                         return None
@@ -154,53 +166,57 @@ def is_speed_in_allowed(velocity):
         return False
 
 
-def main_init():
+def main_init(logger):
     """
     main program initialization: open the serial port, initialize the radar
     """
     # Initialize the USB port to read from the OPS-24x module.  
     # Baud rate will just lower the native USB speed.  
     global serial_port
-    serial_port = serial.Serial(
-        baudrate=115200,
-        parity=serial.PARITY_NONE,
-        stopbits=serial.STOPBITS_ONE,
-        bytesize=serial.EIGHTBITS,
-        timeout=1,
-        writeTimeout=2
-    )
-    if len(sys.argv) > 1:
-        serial_port.port = sys.argv[1]
-    else:
-        serial_port.port = settings.get("serialport","/dev/ttyACM0")  #"/dev/ttyACM0"  # good for linux
-    serial_port.open()
-    serial_port.flushInput()
-    serial_port.flushOutput()
-    
-    VelUnit = settings.get('VelUnit','km')
-    
-    # if (VelUnit=="km"):
-    #     OPS24X_UNITS_PREF=="UK"
-    # else:
-    #     OPS24X_UNITS_PREF=="US"
+    try:
+        serial_port = serial.Serial(
+            baudrate=115200,
+            parity=serial.PARITY_NONE,
+            stopbits=serial.STOPBITS_ONE,
+            bytesize=serial.EIGHTBITS,
+            timeout=1,
+            writeTimeout=2
+        )
+        if len(sys.argv) > 1:
+            serial_port.port = sys.argv[1]
+        else:
+            serial_port.port = settings.get("serialport","/dev/ttyACM0")  #"/dev/ttyACM0"  # good for linux
+        serial_port.open()
+        serial_port.flushInput()
+        serial_port.flushOutput()
+        
+        VelUnit = settings.get('VelUnit','km')
+        
+        # if (VelUnit=="km"):
+        #     OPS24X_UNITS_PREF=="UK"
+        # else:
+        #     OPS24X_UNITS_PREF=="US"
 
-    # Initialize and query Ops24x Module
-    logging.info("Initializing Ops24x Module")
-    send_ops24x_cmd("Send Sampling Frequency: ", OPS24X_SAMPLING_FREQUENCY)
-    send_ops24x_cmd("Send Transmit Power: ", OPS24X_TRANSMIT_POWER)
-    send_ops24x_cmd("Send Magnitude Control: ", OPS24X_MAGNITUDE_MIN)
-    send_ops24x_cmd("Send Decimal digits: ", OPS24X_DECIMAL_DIGITS)
-    send_ops24x_cmd("Send line of Min Speed To Report:", OPS24X_MIN_REPORTABLE)
-    send_ops24x_cmd("Send line of Max Speed To Report: ", OPS24X_MAX_REPORTABLE)
-    send_ops24x_cmd("Send Units Preference: ", OPS24X_UNITS_PREF)
-    send_ops24x_cmd("Send Zeros Preference: ", OPS24X_BLANKS_PREF)
-    send_ops24x_cmd("Send Force Instantaneous speeds: ", OPS24X_LIVE_SPEED)
-    send_ops24x_cmd("Send Directional Preference: ", OPS24X_INBOUND_ONLY)
-    #send_ops24x_cmd("Ask Module Information: ", OPS24X_INFO_QUERY_COMMAND)
+        # Initialize and query Ops24x Module
+        logging.info("Initializing Ops24x Module")
+        send_ops24x_cmd("Send Sampling Frequency: ", OPS24X_SAMPLING_FREQUENCY)
+        send_ops24x_cmd("Send Transmit Power: ", OPS24X_TRANSMIT_POWER)
+        send_ops24x_cmd("Send Magnitude Control: ", OPS24X_MAGNITUDE_MIN)
+        send_ops24x_cmd("Send Decimal digits: ", OPS24X_DECIMAL_DIGITS)
+        send_ops24x_cmd("Send line of Min Speed To Report:", OPS24X_MIN_REPORTABLE)
+        send_ops24x_cmd("Send line of Max Speed To Report: ", OPS24X_MAX_REPORTABLE)
+        send_ops24x_cmd("Send Units Preference: ", OPS24X_UNITS_PREF)
+        send_ops24x_cmd("Send Zeros Preference: ", OPS24X_BLANKS_PREF)
+        send_ops24x_cmd("Send Force Instantaneous speeds: ", OPS24X_LIVE_SPEED)
+        send_ops24x_cmd("Send Directional Preference: ", OPS24X_INBOUND_ONLY)
+        #send_ops24x_cmd("Ask Module Information: ", OPS24X_INFO_QUERY_COMMAND)
+    except Exception as e:
+        alertafunciones.enviarcorreoerror(settings.get('correo','angel.roacho@gmail.com'),settings.get('clave','yovuwtocegxorsmf'),settings.get('mailto','angel_m84@htomail.com'),str(e),logger)
+        logger.error("Main_Init error: " + str(e))
+        
 
 
-
-def main_loop():
+def main_loop(logger):
     """
     main program loop:
     there are two important states in this code, not-tracking and tracking.
@@ -229,7 +245,7 @@ def main_loop():
     
     f_excesovelocidad=datetime.datetime.now()
     f_velocidadlectura=datetime.datetime.now()
-    print('variables',settings)
+    #print('variables',settings)
     # main loop to the program
     while True:
         # Flush serial buffers
@@ -256,7 +272,7 @@ def main_loop():
             # tight loop looking for objects
             while not is_valid_speed:
                 # Get speed from OPS24x
-                velocity = read_velocity()
+                velocity = read_velocity(logger)
                 if velocity is not None:
                     recent_velocity = velocity
                     is_valid_speed = is_speed_in_allowed(recent_velocity)
@@ -301,9 +317,9 @@ def main_loop():
                 print("mayor")
                 if b_excesovelocidad==False:   
                     print (datetime.datetime.now())              
-                    alertafunciones.enviarmensaje(str(velocidadkm) + "|1")
+                    alertafunciones.enviarmensaje(str(velocidadkm) + "|1",logger)
                     #alertafunciones.enviarcorreo(settings.get('correo','angel.roacho@gmail.com'),settings.get('clave','yovuwtocegxorsmf'),settings.get('mailto','angel_m84@htomail.com'),settings.get('ipcamara','127.0.0.1'),velocidadkm)
-                    threading.Thread(target=alertafunciones.enviarcorreo, args=(settings.get('correo','angel.roacho@gmail.com'),settings.get('clave','yovuwtocegxorsmf'),settings.get('mailto','angel_m84@htomail.com'),settings.get('ipcamara','127.0.0.1'),velocidadkm,horasajuste,imgprefix,guardarreporte,medidavelocidad)).start()
+                    threading.Thread(target=alertafunciones.enviarcorreo, args=(settings.get('correo','angel.roacho@gmail.com'),settings.get('clave','yovuwtocegxorsmf'),settings.get('mailto','angel_m84@htomail.com'),settings.get('ipcamara','127.0.0.1'),velocidadkm,horasajuste,imgprefix,guardarreporte,medidavelocidad,logger)).start()
                     b_excesovelocidad=True
                     f_excesovelocidad=datetime.datetime.now()
                     print (datetime.datetime.now())              
@@ -318,7 +334,7 @@ def main_loop():
                     segundospasados=datetime.datetime.now()-f_velocidadlectura
                     if segundospasados.total_seconds()>=2:    
                         f_velocidadlectura=datetime.datetime.now()             
-                        alertafunciones.enviarmensaje(str(velocidadkm) + "|0")
+                        alertafunciones.enviarmensaje(str(velocidadkm) + "|0",logger)
                 else:
                     segundospasados=datetime.datetime.now()-f_excesovelocidad
                     if segundospasados.total_seconds()>=3:
@@ -431,9 +447,9 @@ if __name__ == "__main__":
     to read radar data from an OPS24x RADAR (velocity) sensor 
     and take action upon values (calling event handlers as appropriate) 
     """
-    main_init()
+    main_init(logger)
     try:
-        main_loop()
+        main_loop(logger)
     except KeyboardInterrupt:
         print("Keyboard interrupt received. Exiting.")
     finally:

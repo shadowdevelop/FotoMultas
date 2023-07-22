@@ -1,0 +1,2 @@
+2023-07-22 09:03:16,648 - FotoMultaLog - ERROR - Main_Init error: could not open port 'COM3': FileNotFoundError(2, 'El sistema no puede encontrar el archivo especificado.', None, 2)
+ 2023-07-22 09:05:37,815 - FotoMultaLog - ERROR - Main_Init error: could not open port 'COM3': FileNotFoundError(2, 'El sistema no puede encontrar el archivo especificado.', None, 2)
