@@ -19,9 +19,9 @@ if sys.platform=="linux" or sys.platform=="linux2":
 
 
 logger = logging.getLogger('FotoMultaLog')
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.ERROR)
 fh = TimedRotatingFileHandler('logs/FotomultaLog.log', when='midnight', interval=1, backupCount=7)
-fh.setLevel(logging.INFO)
+fh.setLevel(logging.ERROR)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 fh.setFormatter(formatter)
 logger.addHandler(fh)
@@ -284,7 +284,7 @@ def main_loop(logger):
                 if velocity is not None:
                     recent_velocity = velocity
                     is_valid_speed = is_speed_in_allowed(recent_velocity)
-                    logging.debug(f'not tracking.  received speed:{abs(velocity)} ({is_valid_speed}) ')
+                    logger.info(f'not tracking.  received speed:{abs(velocity)} ({is_valid_speed}) ')
 
                     # only if IDLE_NOTICE_INTERVAL do we do idle notices
                     if IDLE_NOTICE_INTERVAL>0 and not is_valid_speed:
