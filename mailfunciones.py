@@ -1,7 +1,10 @@
+import os
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
+from email.mime.base import MIMEBase
+from email import encoders
 
 class EmailSender:
     def __init__(self,remite,clave,destinatario) -> None:
@@ -20,6 +23,17 @@ class EmailSender:
         with open(archivo,'rb') as f:
             imagen=MIMEImage(f.read())
             self.mensaje.attach(imagen)
+            
+    def adjuntar_zip(self,archivo)->None:
+        with open(archivo,'rb') as f:
+            parte = MIMEBase('application', 'octet-stream')
+            parte.set_payload(f.read())
+        
+        encoders.encode_base64(parte)
+        
+        parte.add_header('Content-Disposition', 'attachment; filename="%s"' % os.path.basename(archivo))
+        self.mensaje.attach(parte)
+        
     
     def enviar(self):
         try:

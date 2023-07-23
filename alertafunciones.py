@@ -55,7 +55,7 @@ def enviarcorreo(correoat,claveat,destinatario,ipcamara,velocidad,ajustehora,img
         correo.set_asunto("Evidencia de exceso de velocidad")
         imagen=tomarfoto(ipcamara,formatted_now,velocidad,imgprefix,guardarimg,medidavel,logger)
         if imagen !=None:
-            correo.adjuntar_imagen(imagen)
+            correo.adjuntar_zip(imagen)
         correo.set_cuerpo("Se detecto un exceso de velocidad a las " + str(formatted_now) +  " : " +  f'{velocidad:.2f}' + " KM/H")
         correo.enviar()
         if imagen !=None:
