@@ -105,7 +105,7 @@ def send_ops24x_cmd(logging_prefix,ops24x_command):
     return ser_write_verify
 
 
-def read_velocity():
+def read_velocity(logger):
     """return the velocity (signed speed) from OPS24x
 
     notes on return values:
