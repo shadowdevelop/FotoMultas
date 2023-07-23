@@ -1,6 +1,7 @@
 import os
 import sys
 import time
+import zipfile
 import serial
 import logging
 from mailfunciones import EmailSender
@@ -52,7 +53,7 @@ def enviarcorreo(correoat,claveat,destinatario,ipcamara,velocidad,ajustehora,img
         formatted_now=now.strftime("%Y-%m-%d_%H-%M-%S")
         correo=EmailSender(correoat,claveat,destinatario)
         correo.set_asunto("Evidencia de exceso de velocidad")
-        imagen=tomarfoto(ipcamara,formatted_now,velocidad,imgprefix,guardarimg,medidavel)
+        imagen=tomarfoto(ipcamara,formatted_now,velocidad,imgprefix,guardarimg,medidavel,logger)
         if imagen !=None:
             correo.adjuntar_imagen(imagen)
         correo.set_cuerpo("Se detecto un exceso de velocidad a las " + str(formatted_now) +  " : " +  f'{velocidad:.2f}' + " KM/H")
@@ -85,6 +86,10 @@ def tomarfoto(ipcamara,fecha,velocidad,equipo,guardarimg,medidavelocidad,logger)
             cv2.putText(frame,text,position,font,fontscale,color,thickness)
             archivo= f"{equipo}_captured_image_{fecha}.jpg"
             cv2.imwrite(archivo,frame)
+            zip_image(archivo, 'imagen.zip')
+            if (os.path.exists(archivo)):
+                os.remove(archivo)
+            archivo='imagen.zip'            
             if guardarimg=="1":
                 archivo2= f"{equipo}_{fecha}.jpg"
                 cv2.imwrite('./reporte/' + archivo2,frame)
@@ -99,6 +104,15 @@ def tomarfoto(ipcamara,fecha,velocidad,equipo,guardarimg,medidavelocidad,logger)
         logger.error("tomarfoto : " + str(ex)) 
         print("error monitor")
     return archivo
+
+def zip_image(image_path, zip_path):
+    # Crear un nuevo archivo zip en zip_path
+    with zipfile.ZipFile(zip_path, 'w') as myzip:
+        # Agregar image_path al archivo zip
+        myzip.write(image_path)
+
+
+
        
 def guardarfoto(imagen,fecha,velocidad):    
     shutil.copy(imagen,'./reporte/' + imagen)
