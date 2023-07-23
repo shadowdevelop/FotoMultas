@@ -181,7 +181,7 @@ def main_init(logger):
     try:
         logger.error("Inica main_init")
         serial_port = serial.Serial(
-            baudrate=115200,
+            baudrate=9600,
             parity=serial.PARITY_NONE,
             stopbits=serial.STOPBITS_ONE,
             bytesize=serial.EIGHTBITS,
