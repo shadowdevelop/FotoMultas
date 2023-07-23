@@ -308,7 +308,7 @@ def main_loop(logger):
             # logging.info('start tracking for acquire')
             # Save old and new speeds
             prior_velocity = recent_velocity
-            velocity = read_velocity()   
+            velocity = read_velocity(logger)   
             if velocity is None:
                 continue
 
