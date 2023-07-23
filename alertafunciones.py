@@ -107,7 +107,7 @@ def tomarfoto(ipcamara,fecha,velocidad,equipo,guardarimg,medidavelocidad,logger)
 
 def zip_image(image_path, zip_path):
     # Crear un nuevo archivo zip en zip_path
-    with zipfile.ZipFile(zip_path, 'w') as myzip:
+    with zipfile.ZipFile(zip_path, 'w', compression=zipfile.ZIP_DEFLATED) as myzip:
         # Agregar image_path al archivo zip
         myzip.write(image_path)
 
