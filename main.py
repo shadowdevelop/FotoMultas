@@ -19,9 +19,9 @@ if sys.platform=="linux" or sys.platform=="linux2":
 
 
 logger = logging.getLogger('FotoMultaLog')
-logger.setLevel(logging.ERROR)
+logger.setLevel(logging.INFO)
 fh = TimedRotatingFileHandler('logs/FotomultaLog.log', when='midnight', interval=1, backupCount=7)
-fh.setLevel(logging.ERROR)
+fh.setLevel(logging.INFO)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 fh.setFormatter(formatter)
 logger.addHandler(fh)
@@ -88,7 +88,7 @@ def send_ops24x_cmd(logging_prefix,ops24x_command):
     global serial_port
     data_for_send_str = ops24x_command
     data_for_send_bytes = str.encode(data_for_send_str)
-    logging.info(f"{logging_prefix}{ops24x_command}")
+    logger.info(f"{logging_prefix}{ops24x_command}")
     serial_port.write(data_for_send_bytes)
     # Initialize message verify checking
     ser_message_start = '{'
@@ -100,7 +100,7 @@ def send_ops24x_cmd(logging_prefix,ops24x_command):
         if data_rx_length != 0:
             data_rx_str = str(data_rx_bytes)
             if data_rx_str.find(ser_message_start):
-                logging.debug(data_rx_str)
+                logger.info(data_rx_str)
                 ser_write_verify = True
     return ser_write_verify
 
