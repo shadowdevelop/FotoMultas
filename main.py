@@ -21,7 +21,7 @@ if sys.platform=="linux" or sys.platform=="linux2":
 logger = logging.getLogger('FotoMultaLog')
 logger.setLevel(logging.ERROR)
 fh = TimedRotatingFileHandler('logs/FotomultaLog.log', when='midnight', interval=1, backupCount=7)
-fh.setLevel(logging.ERROR)
+fh.setLevel(logging.INFO)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 fh.setFormatter(formatter)
 logger.addHandler(fh)
@@ -318,9 +318,10 @@ def main_loop(logger):
             recent_velocity = velocity
             velocidadkm=recent_velocity/27.78
             #velocidadkm=velocity
-            print("velocidad " , velocidadkm, " velocidad real ", velocity)
+            logger.info("velocidad " , velocidadkm, " velocidad real ", velocity)
             
             if (velocidadkm>limitekmsetting):
+                logger.info("Velocidad mayor")
                 print("mayor")
                 if b_excesovelocidad==False:   
                     print (datetime.datetime.now())              
