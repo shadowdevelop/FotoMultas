@@ -19,7 +19,7 @@ if sys.platform=="linux" or sys.platform=="linux2":
 
 
 logger = logging.getLogger('FotoMultaLog')
-logger.setLevel(logging.ERROR)
+logger.setLevel(logging.INFO)
 fh = TimedRotatingFileHandler('logs/FotomultaLog.log', when='midnight', interval=1, backupCount=7)
 fh.setLevel(logging.INFO)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -138,6 +138,7 @@ def read_velocity(logger):
                     if (len(valuearray)==2):
                         object_velocity = float(valuearray[1])     
                         if str(valuearray[0]) in tipos:
+                            logger.info("entro en tipo:" + ops24x_rx_str)
                             try:
                                 object_velocity = float(valuearray[1])     
                                 # print ("velocidad posible : ",object_velocity)           
@@ -265,7 +266,7 @@ def main_loop(logger):
 
         # Two principal states.  NotTracking and Tracking.
         # NotTracking and Tracking are split into two loops and this goes between the two
-
+        logger.info("inicio proceo main loop 1 while")
         # The first time we get a speed report in range, we will move to tracking
         while not tracking:
             # Reset tracking
@@ -305,6 +306,7 @@ def main_loop(logger):
         # Tracking has sub-conditions of acquiring ("just tracking") and target-acquired
         # if there's an object that has stayed consistent for a length of time,
         # it is called "target-acquired"
+        logger.info("inicio proceo main loop 2 while")
         targetless_start_time = tracking_current_time = tracking_start_time = time.time()
         while tracking:
             # Initialize tracking timer
@@ -318,7 +320,7 @@ def main_loop(logger):
             recent_velocity = velocity
             velocidadkm=recent_velocity/27.78
             #velocidadkm=velocity
-            logger.info("velocidad " , velocidadkm, " velocidad real ", velocity)
+            logger.info("velocidad " + str(velocidadkm) + " velocidad real " +  str(velocity))
             
             if (velocidadkm>limitekmsetting):
                 logger.info("Velocidad mayor")
