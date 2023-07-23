@@ -84,8 +84,8 @@ def tomarfoto(ipcamara,fecha,velocidad,equipo,guardarimg,medidavelocidad,logger)
             color=(255,255,255)
             thickness=3
             cv2.putText(frame,text,position,font,fontscale,color,thickness)
-            archivo= f"{equipo}_captured_image_{fecha}.png"
-            cv2.imwrite(archivo,frame,[cv2.IMWRITE_PNG_COMPRESSION, 9])
+            archivo= f"{equipo}_captured_image_{fecha}.jpg"
+            cv2.imwrite(archivo,frame,[cv2.IMWRITE_JPEG_QUALITY, 40])
             zip_image(archivo, 'imagen.zip')
             if (os.path.exists(archivo)):
                 os.remove(archivo)
