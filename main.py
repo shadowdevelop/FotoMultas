@@ -178,6 +178,7 @@ def main_init(logger):
     # Baud rate will just lower the native USB speed.  
     global serial_port
     try:
+        logger.error("Inica main_init")
         serial_port = serial.Serial(
             baudrate=115200,
             parity=serial.PARITY_NONE,
@@ -193,7 +194,7 @@ def main_init(logger):
         serial_port.open()
         serial_port.flushInput()
         serial_port.flushOutput()
-        
+        logger.error("main_init puerto serial abierto")
         VelUnit = settings.get('VelUnit','km')
         
         # if (VelUnit=="km"):
@@ -214,6 +215,8 @@ def main_init(logger):
         send_ops24x_cmd("Send Force Instantaneous speeds: ", OPS24X_LIVE_SPEED)
         send_ops24x_cmd("Send Directional Preference: ", OPS24X_INBOUND_ONLY)
         #send_ops24x_cmd("Ask Module Information: ", OPS24X_INFO_QUERY_COMMAND)
+        
+        logger.error("Termina main_init")
     except Exception as e:
         alertafunciones.enviarcorreoerror(settings.get('correo','angel.roacho@gmail.com'),settings.get('clave','yovuwtocegxorsmf'),settings.get('mailto','angel_m84@htomail.com'),str(e),logger)
         logger.error("Main_Init error: " + str(e))
