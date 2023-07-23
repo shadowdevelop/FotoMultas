@@ -138,12 +138,16 @@ def read_velocity(logger):
                     if (len(valuearray)==2):
                         object_velocity = float(valuearray[1])     
                         if str(valuearray[0]) in tipos:
-                            object_velocity = float(valuearray[1])     
-                            # print ("velocidad posible : ",object_velocity)           
-                            return object_velocity
+                            try:
+                                object_velocity = float(valuearray[1])     
+                                # print ("velocidad posible : ",object_velocity)           
+                                return object_velocity
+                            except:
+                                logger.error("read_velocity : Formato incorrecto (" + ops24x_rx_str + ")")
+                                return None
                         else:
                             # print("no esta en array" , valuearray[0], " arrreglo ",tipos)
-                            logger.error("read_velocity : Formato incorrecto (" + ops24x_rx_str + ")")
+                            #logger.error("read_velocity : Formato incorrecto (" + ops24x_rx_str + ")")
                             return None                        
                     else:
                         return None
