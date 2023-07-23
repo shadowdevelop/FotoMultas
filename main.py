@@ -19,9 +19,9 @@ if sys.platform=="linux" or sys.platform=="linux2":
 
 
 logger = logging.getLogger('FotoMultaLog')
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.ERROR)
 fh = TimedRotatingFileHandler('logs/FotomultaLog.log', when='midnight', interval=1, backupCount=7)
-fh.setLevel(logging.INFO)
+fh.setLevel(logging.ERROR)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 fh.setFormatter(formatter)
 logger.addHandler(fh)
