@@ -88,7 +88,7 @@ def send_ops24x_cmd(logging_prefix,ops24x_command):
     global serial_port
     data_for_send_str = ops24x_command
     data_for_send_bytes = str.encode(data_for_send_str)
-    logger.info(f"{logging_prefix}{ops24x_command}")
+    logger.ERROR(f"{logging_prefix}{ops24x_command}")
     serial_port.write(data_for_send_bytes)
     # Initialize message verify checking
     ser_message_start = '{'
@@ -97,10 +97,11 @@ def send_ops24x_cmd(logging_prefix,ops24x_command):
     while not ser_write_verify:
         data_rx_bytes = serial_port.readline()
         data_rx_length = len(data_rx_bytes)
+        logger.ERROR("LEctura cruda: " + str(data_rx_bytes))
         if data_rx_length != 0:
             data_rx_str = str(data_rx_bytes)
             if data_rx_str.find(ser_message_start):
-                logger.info(data_rx_str)
+                logger.ERROR(data_rx_str)
                 ser_write_verify = True
     return ser_write_verify
 
@@ -458,7 +459,7 @@ if __name__ == "__main__":
     to read radar data from an OPS24x RADAR (velocity) sensor 
     and take action upon values (calling event handlers as appropriate) 
     """
-    time.sleep(25)
+    #time.sleep(25)
     main_init(logger)
     try:
         main_loop(logger)
