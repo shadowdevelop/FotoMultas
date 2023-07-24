@@ -458,6 +458,7 @@ if __name__ == "__main__":
     to read radar data from an OPS24x RADAR (velocity) sensor 
     and take action upon values (calling event handlers as appropriate) 
     """
+    time.sleep(25)
     main_init(logger)
     try:
         main_loop(logger)
