@@ -217,6 +217,21 @@ def main_init(logger):
         send_ops24x_cmd("Send Zeros Preference: ", OPS24X_BLANKS_PREF)
         send_ops24x_cmd("Send Force Instantaneous speeds: ", OPS24X_LIVE_SPEED)
         send_ops24x_cmd("Send Directional Preference: ", OPS24X_INBOUND_ONLY)
+        
+        time.sleep(5)
+        
+        
+        send_ops24x_cmd("Send Sampling Frequency: ", OPS24X_SAMPLING_FREQUENCY)
+        send_ops24x_cmd("Send Transmit Power: ", OPS24X_TRANSMIT_POWER)
+        send_ops24x_cmd("Send Magnitude Control: ", OPS24X_MAGNITUDE_MIN)
+        send_ops24x_cmd("Send Decimal digits: ", OPS24X_DECIMAL_DIGITS)
+        send_ops24x_cmd("Send line of Min Speed To Report:", OPS24X_MIN_REPORTABLE)
+        send_ops24x_cmd("Send line of Max Speed To Report: ", OPS24X_MAX_REPORTABLE)
+        send_ops24x_cmd("Send Units Preference: ", OPS24X_UNITS_PREF)
+        send_ops24x_cmd("Send Zeros Preference: ", OPS24X_BLANKS_PREF)
+        send_ops24x_cmd("Send Force Instantaneous speeds: ", OPS24X_LIVE_SPEED)
+        send_ops24x_cmd("Send Directional Preference: ", OPS24X_INBOUND_ONLY)
+        
         #send_ops24x_cmd("Ask Module Information: ", OPS24X_INFO_QUERY_COMMAND)
         
         logger.error("Termina main_init")
