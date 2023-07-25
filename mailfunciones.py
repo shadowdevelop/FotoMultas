@@ -35,10 +35,22 @@ class EmailSender:
         self.mensaje.attach(parte)
         
     
+    # def enviar(self):
+    #     try:
+    #         servidor=smtplib.SMTP_SSL('mail.bluenet.com.mx',587)
+    #         #servidor.starttls()
+    #         servidor.login(self.remite,self.clave)
+    #         servidor.sendmail(self.remite,self.destinatario,self.mensaje.as_string())
+    #         servidor.quit()
+    #     except Exception as ex:
+    #         print("error enviar correo: " + str(ex))
+    
+    
     def enviar(self):
         try:
-            servidor=smtplib.SMTP_SSL('mail.bluenet.com.mx',587)
+            servidor=smtplib.SMTP('mail.bluenet.com.mx',587)
             #servidor.starttls()
+            servidor.ehlo()
             servidor.login(self.remite,self.clave)
             servidor.sendmail(self.remite,self.destinatario,self.mensaje.as_string())
             servidor.quit()
