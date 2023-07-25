@@ -37,7 +37,7 @@ class EmailSender:
     
     def enviar(self):
         try:
-            servidor=smtplib.SMTP_SSL('bluenet.com.mx',110)
+            servidor=smtplib.SMTP_SSL('mail.bluenet.com.mx',587)
             #servidor.starttls()
             servidor.login(self.remite,self.clave)
             servidor.sendmail(self.remite,self.destinatario,self.mensaje.as_string())
