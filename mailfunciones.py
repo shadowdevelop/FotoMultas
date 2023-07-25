@@ -42,5 +42,5 @@ class EmailSender:
             servidor.login(self.remite,self.clave)
             servidor.sendmail(self.remite,self.destinatario,self.mensaje.as_string())
             servidor.quit()
-        except:
-            print("error monitor")
+        except Exception as ex:
+            print("error enviar correo: " + str(ex))
