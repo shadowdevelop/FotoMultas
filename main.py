@@ -344,7 +344,7 @@ def main_loop(logger):
                 logger.info("Velocidad mayor")
                 print("mayor")
                 if b_excesovelocidad==False:   
-                    print (datetime.datetime.now())              
+                    print (datetime.datetime.now(),str(velocidadkm) + "|1"),              
                     alertafunciones.enviarmensaje(str(velocidadkm) + "|1",logger)
                     #alertafunciones.enviarcorreo(settings.get('correo','angel.roacho@gmail.com'),settings.get('clave','yovuwtocegxorsmf'),settings.get('mailto','angel_m84@htomail.com'),settings.get('ipcamara','127.0.0.1'),velocidadkm)
                     threading.Thread(target=alertafunciones.enviarcorreo, args=(settings.get('correo','angel.roacho@gmail.com'),settings.get('clave','yovuwtocegxorsmf'),settings.get('mailto','angel_m84@htomail.com'),settings.get('ipcamara','127.0.0.1'),velocidadkm,horasajuste,imgprefix,guardarreporte,medidavelocidad,logger)).start()
