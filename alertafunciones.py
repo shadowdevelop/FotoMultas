@@ -96,8 +96,8 @@ def tomarfoto(ipcamara,fecha,velocidad,equipo,guardarimg,medidavelocidad,logger)
                 try:
                     db=reportdb()
                     db.insert(velocidad,archivo2,equipo)
-                except:
-                    pass
+                except Exception as ex:
+                    logger.error("tomarfoto : " + str(ex))  
                 #guardarfoto(archivo,fecha,velocidad)
         cap.release()
     except Exception as ex:
