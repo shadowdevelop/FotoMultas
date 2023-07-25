@@ -89,11 +89,16 @@ def tomarfoto(ipcamara,fecha,velocidad,equipo,guardarimg,medidavelocidad,logger)
             zip_image(archivo, 'imagen.zip')
             if (os.path.exists(archivo)):
                 os.remove(archivo)
-            archivo='imagen.zip'            
+            archivo='imagen.zip'  
+            print("termino comprecion")          
             if guardarimg=="1":
+                print("inicio guardado")          
                 archivo2= f"{equipo}_{fecha}.jpg"
+                print("inicio guardado 2")          
                 cv2.imwrite('./reporte/' + str(archivo2),frame)
+                print("inicio guardado 3")          
                 try:
+                    print("inicio guardado 4")          
                     db=reportdb()
                     db.insert(velocidad,archivo2,equipo)
                 except Exception as ex:
