@@ -270,6 +270,7 @@ def main_loop(logger):
     
     f_excesovelocidad=datetime.datetime.now()
     f_velocidadlectura=datetime.datetime.now()
+    alertafunciones.enviarmensaje("1|1")
     #print('variables',settings)
     # main loop to the program
     while True:

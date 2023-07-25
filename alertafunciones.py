@@ -26,7 +26,7 @@ def enviarcorreoerror(correoat,claveat,destinatario,error,logger):
 
 def enviarmensaje(mensaje,logger):
     try:
-        serial_mensaje = serial.Serial() 
+        #serial_mensaje = serial.Serial() 
         serial_mensaje = serial.Serial(
             baudrate=9600,
             parity=serial.PARITY_NONE,
