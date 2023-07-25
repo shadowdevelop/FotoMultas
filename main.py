@@ -270,7 +270,7 @@ def main_loop(logger):
     
     f_excesovelocidad=datetime.datetime.now()
     f_velocidadlectura=datetime.datetime.now()
-    alertafunciones.enviarmensaje("1|1",logger)
+    alertafunciones.enviarmensaje("1|0",logger)
     #print('variables',settings)
     # main loop to the program
     while True:
@@ -344,8 +344,8 @@ def main_loop(logger):
                 logger.info("Velocidad mayor")
                 print("mayor")
                 if b_excesovelocidad==False:   
-                    print (datetime.datetime.now(),str(velocidadkm) + "|1"),              
-                    alertafunciones.enviarmensaje(str(velocidadkm) + "|1",logger)
+                    print (datetime.datetime.now(),str(int(velocidadkm)) + "|1"),              
+                    alertafunciones.enviarmensaje(str(int(velocidadkm)) + "|1",logger)
                     #alertafunciones.enviarcorreo(settings.get('correo','angel.roacho@gmail.com'),settings.get('clave','yovuwtocegxorsmf'),settings.get('mailto','angel_m84@htomail.com'),settings.get('ipcamara','127.0.0.1'),velocidadkm)
                     threading.Thread(target=alertafunciones.enviarcorreo, args=(settings.get('correo','angel.roacho@gmail.com'),settings.get('clave','yovuwtocegxorsmf'),settings.get('mailto','angel_m84@htomail.com'),settings.get('ipcamara','127.0.0.1'),velocidadkm,horasajuste,imgprefix,guardarreporte,medidavelocidad,logger)).start()
                     b_excesovelocidad=True
@@ -362,7 +362,7 @@ def main_loop(logger):
                     segundospasados=datetime.datetime.now()-f_velocidadlectura
                     if segundospasados.total_seconds()>=2:    
                         f_velocidadlectura=datetime.datetime.now()             
-                        alertafunciones.enviarmensaje(str(velocidadkm) + "|0",logger)
+                        alertafunciones.enviarmensaje(str(int(velocidadkm)) + "|0",logger)
                 else:
                     segundospasados=datetime.datetime.now()-f_excesovelocidad
                     if segundospasados.total_seconds()>=3:
