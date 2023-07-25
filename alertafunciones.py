@@ -92,7 +92,7 @@ def tomarfoto(ipcamara,fecha,velocidad,equipo,guardarimg,medidavelocidad,logger)
             archivo='imagen.zip'            
             if guardarimg=="1":
                 archivo2= f"{equipo}_{fecha}.jpg"
-                cv2.imwrite('./reporte/' + archivo2,frame)
+                cv2.imwrite('./reporte/' + str(archivo2),frame)
                 try:
                     db=reportdb()
                     db.insert(velocidad,archivo2,equipo)
