@@ -88,7 +88,7 @@ def send_ops24x_cmd(logging_prefix,ops24x_command):
     global serial_port
     data_for_send_str = ops24x_command
     data_for_send_bytes = str.encode(data_for_send_str)
-    logger.error(f"{logging_prefix}{ops24x_command}")
+    logger.info(f"{logging_prefix}{ops24x_command}")
     serial_port.write(data_for_send_bytes)
     # Initialize message verify checking
     ser_message_start = '{'
@@ -97,11 +97,11 @@ def send_ops24x_cmd(logging_prefix,ops24x_command):
     while not ser_write_verify:
         data_rx_bytes = serial_port.readline()
         data_rx_length = len(data_rx_bytes)
-        logger.error("LEctura cruda: " + str(data_rx_bytes))
+        #logger.info(logging_prefix + str(data_rx_bytes))
         if data_rx_length != 0:
             data_rx_str = str(data_rx_bytes)
             if data_rx_str.find(ser_message_start):
-                logger.error(data_rx_str)
+                #logger.info(data_rx_str)
                 ser_write_verify = True
     return ser_write_verify
 
@@ -123,7 +123,7 @@ def read_velocity(logger):
     # a case can be made that if the length is 0, it's a newline char so try again
     if ops24x_rx_bytes_length != 0:
         ops24x_rx_str = str.rstrip(str(ops24x_rx_bytes.decode('utf-8', 'strict')))# str(ops24x_rx_bytes)
-        logger.info("velocidad " + ops24x_rx_str)
+        logger.info("Lectura: " + ops24x_rx_str)
         #print("lectura: ",ops24x_rx_str," bytes ",ops24x_rx_bytes)
         if ops24x_rx_str.find('{') == -1:  # really, { would only be found in first char            
             if (ops24x_rx_str.find(',')==-1):
@@ -140,7 +140,7 @@ def read_velocity(logger):
                     if (len(valuearray)==2):
                         object_velocity = float(valuearray[1])     
                         if str(valuearray[0]) in tipos:
-                            logger.info("entro en tipo:" + ops24x_rx_str)
+                            #logger.info("entro en tipo:" + ops24x_rx_str)
                             try:
                                 object_velocity = float(valuearray[1])     
                                 # print ("velocidad posible : ",object_velocity)           
@@ -181,7 +181,7 @@ def main_init(logger):
     # Baud rate will just lower the native USB speed.  
     global serial_port
     try:
-        logger.error("Inica main_init")
+        logger.info("Inica main_init")
         serial_port = serial.Serial(
             baudrate=115200,
             parity=serial.PARITY_NONE,
@@ -197,7 +197,7 @@ def main_init(logger):
         serial_port.open()
         serial_port.flushInput()
         serial_port.flushOutput()
-        logger.error("main_init puerto serial abierto")
+        logger.info("main_init puerto serial abierto")
         VelUnit = settings.get('VelUnit','km')
         
         # if (VelUnit=="km"):
@@ -247,10 +247,10 @@ def main_init(logger):
         
         #send_ops24x_cmd("Ask Module Information: ", OPS24X_INFO_QUERY_COMMAND)
         
-        logger.error("Termina main_init")
+        logger.info("Termina main_init")
     except Exception as e:
         alertafunciones.enviarcorreoerror(settings.get('correo','angel.roacho@gmail.com'),settings.get('clave','yovuwtocegxorsmf'),settings.get('mailto','angel_m84@htomail.com'),str(e),logger)
-        logger.error("Main_Init error: " + str(e))
+        logger.info("Main_Init error: " + str(e))
         
 
 
