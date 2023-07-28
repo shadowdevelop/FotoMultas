@@ -19,17 +19,17 @@ if sys.platform=="linux" or sys.platform=="linux2":
 
 
 logger = logging.getLogger('FotoMultaLog')
-logger.setLevel(logging.ERROR)
+logger.setLevel(logging.INFO)
 fh = TimedRotatingFileHandler('logs/FotomultaLog.log', when='midnight', interval=1, backupCount=7)
-fh.setLevel(logging.ERROR)
+fh.setLevel(logging.INFO)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 fh.setFormatter(formatter)
 logger.addHandler(fh)
 
 
 
-logging.basicConfig(stream=sys.stderr, level=logging.WARN)
-logging.debug('Welcome to ops_radar')
+#logging.basicConfig(stream=sys.stderr, level=logging.WARN)
+logger.debug('Welcome to ops_radar')
 
 ####################################################
 #
@@ -206,7 +206,20 @@ def main_init(logger):
         #     OPS24X_UNITS_PREF=="US"
 
         # Initialize and query Ops24x Module
-        logging.info("Initializing Ops24x Module")
+        logger.info("Initializing Ops24x Module")
+        
+        print("Send Sampling Frequency: ", OPS24X_SAMPLING_FREQUENCY)
+        print("Send Transmit Power: ", OPS24X_TRANSMIT_POWER)
+        print("Send Magnitude Control: ", OPS24X_MAGNITUDE_MIN)
+        print("Send Decimal digits: ", OPS24X_DECIMAL_DIGITS)
+        print("Send line of Min Speed To Report:", OPS24X_MIN_REPORTABLE)
+        print("Send line of Max Speed To Report: ", OPS24X_MAX_REPORTABLE)
+        print("Send Units Preference: ", OPS24X_UNITS_PREF)
+        print("Send Zeros Preference: ", OPS24X_BLANKS_PREF)
+        print("Send Force Instantaneous speeds: ", OPS24X_LIVE_SPEED)
+        print("Send Directional Preference: ", OPS24X_INBOUND_ONLY)
+        
+        
         send_ops24x_cmd("Send Sampling Frequency: ", OPS24X_SAMPLING_FREQUENCY)
         send_ops24x_cmd("Send Transmit Power: ", OPS24X_TRANSMIT_POWER)
         send_ops24x_cmd("Send Magnitude Control: ", OPS24X_MAGNITUDE_MIN)
@@ -310,7 +323,7 @@ def main_loop(logger):
                         idle_delta_time = idle_current_time - idle_start_time
                         if idle_delta_time > IDLE_NOTICE_INTERVAL:
                             radar_actions.on_idle_notice_interval()
-                            logging.debug('notice: still idle')
+                            logger.debug('notice: still idle')
                             # Reset wait timer
                             idle_start_time = idle_current_time
                     # else:
@@ -318,7 +331,7 @@ def main_loop(logger):
             # We left the 'while no activity' loop.  a Valid speed was received. move to tracking loop
             # Begin tracking
             tracking = True
-            logging.debug(f'NOW move to tracking.  received speed:{abs(velocity)}')
+            logger.debug(f'NOW move to tracking.  received speed:{abs(velocity)}')
 
 
         # Tracking has sub-conditions of acquiring ("just tracking") and target-acquired
@@ -328,7 +341,7 @@ def main_loop(logger):
         targetless_start_time = tracking_current_time = tracking_start_time = time.time()
         while tracking:
             # Initialize tracking timer
-            # logging.info('start tracking for acquire')
+            # logger.info('start tracking for acquire')
             # Save old and new speeds
             prior_velocity = recent_velocity
             velocity = read_velocity(logger)   
@@ -368,7 +381,7 @@ def main_loop(logger):
                     if segundospasados.total_seconds()>=3:
                         b_excesovelocidad=False
 
-            logging.debug(f'analyze received speed:{abs(recent_velocity)}')
+            logger.debug(f'analyze received speed:{abs(recent_velocity)}')
             tracking_current_time = time.time()
 
             # states: not target_acquired and target_acquired
@@ -378,7 +391,7 @@ def main_loop(logger):
                 # alertafunciones.enviarmensaje(str(recent_velocity) + "|1")upon speed-out-of-range for more than an allowable time, tracking = false
 
             if is_speed_in_allowed(recent_velocity):
-                # logging.debug('look for direction changes. confirm prior_velocity = ', prior_velocity, 'recent_velocity = ', recent_velocity)
+                # logger.debug('look for direction changes. confirm prior_velocity = ', prior_velocity, 'recent_velocity = ', recent_velocity)
                 # The instant the direction changes, old tracking ends
 
                 if (prior_velocity>0 and recent_velocity>0) or \
@@ -394,9 +407,9 @@ def main_loop(logger):
                             radar_actions.on_target_acquired(recent_velocity)
                             # if we are to note the target acquisition as soon as possible, it goes here.
                             if recent_velocity > 0:  # motion inbound
-                                logging.info(f"First acquire of inbound motion (speed {recent_velocity})")
+                                logger.info(f"First acquire of inbound motion (speed {recent_velocity})")
                             elif recent_velocity < 0: # motion outbound
-                                logging.info(f"First acquire of outbound motion (speed {recent_velocity})")
+                                logger.info(f"First acquire of outbound motion (speed {recent_velocity})")
 
                             target_acquired = True # will be changed only first time tracking_delta_time > MIN_TRACK_TO_ACQUIRED_TIME
                             # now Continue tracking and getting speeds until direction change or wait timeout
@@ -404,10 +417,10 @@ def main_loop(logger):
                             # target still acquired. that's great
                             # hey, if there's a change in speed, do any desired actions
                             if abs(recent_velocity) > abs(prior_velocity):
-                                logging.info(f"Acceleration detected (speed {recent_velocity})")
+                                logger.info(f"Acceleration detected (speed {recent_velocity})")
                                 radar_actions.on_target_accelerating(recent_velocity)
                             # elif abs(recent_velocity) < abs(prior_velocity):
-                            #     logging.info(f"Deceleration detected (speed {recent_velocity})")
+                            #     logger.info(f"Deceleration detected (speed {recent_velocity})")
                             #     radar_actions.on_target_decelerating(recent_velocity)
 
                 else: # not the same sign (thus not the same direction)
@@ -424,22 +437,22 @@ def main_loop(logger):
                         prior_velocity = 0
 
                         if recent_velocity > 0: # motion changed to inbound
-                            logging.info('direction changed. motion now inbound')
+                            logger.info('direction changed. motion now inbound')
                         elif recent_velocity < 0:# motion outbound
-                            logging.info('direction changed. motion now outbound')
+                            logger.info('direction changed. motion now outbound')
                         else:
                             # Getting zeros.  No object seen
-                            logging.info('Tracking no object')
+                            logger.info('Tracking no object')
                     else:
                         # Tracking time too short and wasn't not valid
-                        logging.info('Direction changed before tracking lock, restart tracking')
+                        logger.info('Direction changed before tracking lock, restart tracking')
 
                     # Reset valid tracking and continue to track new object                            
                     targetless_start_time = time.time()  # it could be the start of targetless
                     tracking_start_time = time.time()    # or even the start of tracking
 
             else: # velocity is out of allowed range
-                logging.debug(f'speed {abs(velocity)} outside of allowed range')
+                logger.debug(f'speed {abs(velocity)} outside of allowed range')
                 targetless_current_time = time.time()
                 if targetless_start_time == None:
                     targetless_start_time = time.time()
@@ -457,12 +470,12 @@ def main_loop(logger):
                             # goes out of range (like walks behind) so this is not the ideal way to report.
                             if recent_velocity > 0:
                                 # just captured motion was inbound.  could have changed though, it's a low reading
-                                logging.info('target lost.  seeing disallowed inbound')
+                                logger.info('target lost.  seeing disallowed inbound')
                             elif recent_velocity < 0:
                                 # just captured motion was outbound.  could have changed though, it's a low reading
-                                logging.info('target lost.  seeing disallowed outbound')
+                                logger.info('target lost.  seeing disallowed outbound')
                             else:
-                                logging.info('target lost.  seeing zeros')
+                                logger.info('target lost.  seeing zeros')
                         target_acquired = False
                         tracking = False
         # end if tracking
