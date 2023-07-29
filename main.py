@@ -67,7 +67,7 @@ OPS24X_DIRECTION_PREF = OPS24X_BIDIRECTIONAL
 
 # These are for lab development only, so hand-waves are usable
 OPS24X_UNITS_PREF = 'UC'  # "UC" for cm/s
-TARGET_MAX_SPEED_ALLOWED = 150
+TARGET_MAX_SPEED_ALLOWED = 500
 OPS24X_DIRECTION_PREF = OPS24X_INBOUND_ONLY
 # remove them when moving to actual vehicle testing.
 
@@ -164,7 +164,7 @@ def read_velocity(logger):
     return None
 
 
-def is_speed_in_allowed(velocity):
+def is_speed_in_allowed(velocity,logger):
     """boolean function returns True if the argument is in acceptable range
 
     Parameter:
@@ -174,6 +174,7 @@ def is_speed_in_allowed(velocity):
     if TARGET_MIN_SPEED_ALLOWED < abs(velocity) < TARGET_MAX_SPEED_ALLOWED:
         return True
     else:
+        logger.error("Velocidad invalida : " + velocity);
         return False
 
 
@@ -319,7 +320,7 @@ def main_loop(logger):
                 velocity = read_velocity(logger)
                 if velocity is not None:
                     recent_velocity = velocity
-                    is_valid_speed = is_speed_in_allowed(recent_velocity)
+                    is_valid_speed = is_speed_in_allowed(recent_velocity,logger)
                     logger.info(f'not tracking.  received speed:{abs(velocity)} ({is_valid_speed}) ')
 
                     # only if IDLE_NOTICE_INTERVAL do we do idle notices
