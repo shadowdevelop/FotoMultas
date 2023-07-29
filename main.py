@@ -26,10 +26,10 @@ formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(messag
 fh.setFormatter(formatter)
 logger.addHandler(fh)
 
-ch = logging.StreamHandler()
-ch.setLevel(logging.INFO)
-ch.setFormatter(formatter)
-logger.addHandler(ch)
+# ch = logging.StreamHandler()
+# ch.setLevel(logging.INFO)
+# ch.setFormatter(formatter)
+# logger.addHandler(ch)
 
 
 #logging.basicConfig(stream=sys.stderr, level=logging.WARN)
@@ -52,7 +52,7 @@ OPS24X_INFO_QUERY_COMMAND = '??'
 
 # OPS24x configuration parameters (sent to sensor)
 OPS24X_UNITS_PREF = 'UK'            # US for MPH , UK for Km/H 
-OPS24X_SAMPLING_FREQUENCY = 'SX'    # 10Ksps
+OPS24X_SAMPLING_FREQUENCY = 'SV'    # 10Ksps
 OPS24X_TRANSMIT_POWER = 'PX'        # max power
 OPS24X_MAGNITUDE_MIN = 'M>20\n'     # Magnitude must be > this
 OPS24X_DECIMAL_DIGITS = 'F0'        # F-zero for no decimal reporting
@@ -235,6 +235,7 @@ def main_init(logger):
         send_ops24x_cmd("Send Force Instantaneous speeds: ", OPS24X_LIVE_SPEED)
         send_ops24x_cmd("Send Directional Preference: ", OPS24X_INBOUND_ONLY)
         
+        
         time.sleep(5)
         
         
@@ -394,94 +395,7 @@ def main_loop(logger):
                 # upon change of direction   if new speed is allowed, acq to not-acq. if out, tracking=false
                 # alertafunciones.enviarmensaje(str(recent_velocity) + "|1")upon speed-out-of-range for more than an allowable time, tracking = false
 
-            if is_speed_in_allowed(recent_velocity):
-                # logger.debug('look for direction changes. confirm prior_velocity = ', prior_velocity, 'recent_velocity = ', recent_velocity)
-                # The instant the direction changes, old tracking ends
-
-                if (prior_velocity>0 and recent_velocity>0) or \
-                        (prior_velocity<0 and recent_velocity<0):
-                    # This should be the most common case when observing a target
-
-                    # Reset targetless wait timer
-                    targetless_start_time = None # we most definitely have a target
-
-                    # Check if tracking time is long enough to be valid
-                    if (tracking_current_time - tracking_start_time) > MIN_TRACK_TO_ACQUIRED_TIME:
-                        if not target_acquired:
-                            radar_actions.on_target_acquired(recent_velocity)
-                            # if we are to note the target acquisition as soon as possible, it goes here.
-                            if recent_velocity > 0:  # motion inbound
-                                logger.info(f"First acquire of inbound motion (speed {recent_velocity})")
-                            elif recent_velocity < 0: # motion outbound
-                                logger.info(f"First acquire of outbound motion (speed {recent_velocity})")
-
-                            target_acquired = True # will be changed only first time tracking_delta_time > MIN_TRACK_TO_ACQUIRED_TIME
-                            # now Continue tracking and getting speeds until direction change or wait timeout
-                        else:
-                            # target still acquired. that's great
-                            # hey, if there's a change in speed, do any desired actions
-                            if abs(recent_velocity) > abs(prior_velocity):
-                                logger.info(f"Acceleration detected (speed {recent_velocity})")
-                                radar_actions.on_target_accelerating(recent_velocity)
-                            # elif abs(recent_velocity) < abs(prior_velocity):
-                            #     logger.info(f"Deceleration detected (speed {recent_velocity})")
-                            #     radar_actions.on_target_decelerating(recent_velocity)
-
-                else: # not the same sign (thus not the same direction)
-                    # Direction changed!
-                    # So, this immediately stops tracking one target and starts tracking another
-                    # which has similar logic to going thru tracking/not-acquired and then acquired. 
-                    if target_acquired:  # well, it is not acquired now
-                        # possible cases:
-                        #   Tracking was valid and object is going past us.  Simple choice: declare new object.
-                        #   A new object is coming opposite direction.  Simple choice: immediately decree the old object is gone
-                        
-                        # So, now we have to enforce business policy.  
-                        target_acquired = False # future policy improvement: don't do this immediately?
-                        prior_velocity = 0
-
-                        if recent_velocity > 0: # motion changed to inbound
-                            logger.info('direction changed. motion now inbound')
-                        elif recent_velocity < 0:# motion outbound
-                            logger.info('direction changed. motion now outbound')
-                        else:
-                            # Getting zeros.  No object seen
-                            logger.info('Tracking no object')
-                    else:
-                        # Tracking time too short and wasn't not valid
-                        logger.info('Direction changed before tracking lock, restart tracking')
-
-                    # Reset valid tracking and continue to track new object                            
-                    targetless_start_time = time.time()  # it could be the start of targetless
-                    tracking_start_time = time.time()    # or even the start of tracking
-
-            else: # velocity is out of allowed range
-                logger.debug(f'speed {abs(velocity)} outside of allowed range')
-                targetless_current_time = time.time()
-                if targetless_start_time == None:
-                    targetless_start_time = time.time()
-                else:
-                    targetless_delta_time = targetless_current_time - targetless_start_time
-                    # declare giving up on target if time expired
-                    # todo?: may want to do that if direction changes now, too
-                    if targetless_delta_time > TARGETLESS_MIN_INTERVAL_TIME:
-                        if target_acquired:
-                            radar_actions.on_target_lost()
-                            # some target was acquired, but apparently object went out of range
-                            # because now we have out-of-range speed
-                            # OBSERVE: if target disappears (before direction switch), it will be counted here
-                            # WARN: but it could be a very long time between reporting events if the target
-                            # goes out of range (like walks behind) so this is not the ideal way to report.
-                            if recent_velocity > 0:
-                                # just captured motion was inbound.  could have changed though, it's a low reading
-                                logger.info('target lost.  seeing disallowed inbound')
-                            elif recent_velocity < 0:
-                                # just captured motion was outbound.  could have changed though, it's a low reading
-                                logger.info('target lost.  seeing disallowed outbound')
-                            else:
-                                logger.info('target lost.  seeing zeros')
-                        target_acquired = False
-                        tracking = False
+            
         # end if tracking
     # end the not-tracking -> tracking loop.  do it again
 
