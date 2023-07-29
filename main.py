@@ -174,7 +174,7 @@ def is_speed_in_allowed(velocity,logger):
     if TARGET_MIN_SPEED_ALLOWED < abs(velocity) < TARGET_MAX_SPEED_ALLOWED:
         return True
     else:
-        logger.error("Velocidad invalida : " + velocity);
+        logger.error("Velocidad invalida : " + str(velocity));
         return False
 
 
