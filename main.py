@@ -146,7 +146,7 @@ def read_velocity(logger):
                         if str(valuearray[0]) in tipos:
                             #logger.info("entro en tipo:" + ops24x_rx_str)
                             try:
-                                object_velocity = float(valuearray[1])     
+                                object_velocity = abs(float(valuearray[1]))     
                                 # print ("velocidad posible : ",object_velocity)           
                                 return object_velocity
                             except:
