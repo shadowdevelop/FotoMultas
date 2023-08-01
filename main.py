@@ -323,7 +323,7 @@ def main_loop(logger):
                 # Get speed from OPS24x
                 velocity = read_velocity(logger)
                 if velocity is not None:
-                    recent_velocity = velocity
+                    recent_velocity = velocity 
                     is_valid_speed = is_speed_in_allowed(recent_velocity,logger)
                     logger.info(f'not tracking.  received speed:{abs(velocity)} ({is_valid_speed}) ')
 
