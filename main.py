@@ -127,7 +127,7 @@ def read_velocity(logger):
     # a case can be made that if the length is 0, it's a newline char so try again
     if ops24x_rx_bytes_length != 0:
         ops24x_rx_str = str.rstrip(str(ops24x_rx_bytes.decode('utf-8', 'strict')))# str(ops24x_rx_bytes)
-        logger.error("Lectura: " + ops24x_rx_str)
+        #logger.error("Lectura: " + ops24x_rx_str)
         #print("lectura: ",ops24x_rx_str," bytes ",ops24x_rx_bytes)
         if ops24x_rx_str.find('{') == -1:  # really, { would only be found in first char            
             if (ops24x_rx_str.find(',')==-1):
@@ -174,7 +174,7 @@ def is_speed_in_allowed(velocity,logger):
     if TARGET_MIN_SPEED_ALLOWED < abs(velocity) < TARGET_MAX_SPEED_ALLOWED:
         return True
     else:
-        logger.error("Velocidad invalida : " + str(velocity));
+        #logger.error("Velocidad invalida : " + str(velocity));
         return False
 
 
@@ -262,7 +262,7 @@ def main_init(logger):
         logger.info("Termina main_init")
     except Exception as e:
         alertafunciones.enviarcorreoerror(settings.get('correo','angel.roacho@gmail.com'),settings.get('clave','yovuwtocegxorsmf'),settings.get('mailto','angel_m84@htomail.com'),str(e),logger)
-        logger.info("Main_Init error: " + str(e))
+        logger.error("Main_Init error: " + str(e))
         
 
 
@@ -327,7 +327,7 @@ def main_loop(logger):
                 if velocity is not None:
                     recent_velocity = velocity 
                     is_valid_speed = is_speed_in_allowed(recent_velocity,logger)
-                    logger.info(f'not tracking.  received speed:{abs(velocity)} ({is_valid_speed}) ')
+                    #logger.info(f'not tracking.  received speed:{abs(velocity)} ({is_valid_speed}) ')
 
                     # only if IDLE_NOTICE_INTERVAL do we do idle notices
                     if IDLE_NOTICE_INTERVAL>0 and not is_valid_speed:
@@ -366,7 +366,7 @@ def main_loop(logger):
             logger.info("velocidad " + str(velocidadkm) + " velocidad real " +  str(velocity))
             
             if (velocidadkm>limitekmsetting):
-                logger.error("Velocidad mayor" + " velocidad real " +  str(velocity))
+                #logger.info("Velocidad mayor" + " velocidad real " +  str(velocity))
                 print("mayor")
                 if b_excesovelocidad==False:   
                     print (datetime.datetime.now(),str(int(velocidadkm)) + "|1"),              
