@@ -237,7 +237,7 @@ def main_init(logger):
         send_ops24x_cmd("Send Directional Preference: ", OPS24X_BIDIRECTIONAL)        
         send_ops24x_cmd("Send Reported Range Filter : ", "OD")
         send_ops24x_cmd("Send Reported Range Filter : ", "r>0")
-        send_ops24x_cmd("Send Reported Range Filter : ", "r<0")
+        send_ops24x_cmd("Send Reported Range Filter : ", "r<25")
         
         
         time.sleep(5)
@@ -255,7 +255,7 @@ def main_init(logger):
         send_ops24x_cmd("Send Directional Preference: ", OPS24X_BIDIRECTIONAL)        
         send_ops24x_cmd("Send Reported Range Filter : ", "OD")
         send_ops24x_cmd("Send Reported Range Filter : ", "r>0")
-        send_ops24x_cmd("Send Reported Range Filter : ", "r<0")
+        send_ops24x_cmd("Send Reported Range Filter : ", "r<25")
         
         send_ops24x_cmd("Send Reported Range Filter : ", "A?")
         send_ops24x_cmd("Send Reported Range Filter : ", "??")
