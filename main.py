@@ -101,12 +101,13 @@ def send_ops24x_cmd(logging_prefix,ops24x_command):
     while not ser_write_verify:
         data_rx_bytes = serial_port.readline()
         data_rx_length = len(data_rx_bytes)
-        #logger.info(logging_prefix + str(data_rx_bytes))
+        logger.info(logging_prefix  + str(data_rx_bytes))
         if data_rx_length != 0:
             data_rx_str = str(data_rx_bytes)
             if data_rx_str.find(ser_message_start):
                 #logger.info(data_rx_str)
-                ser_write_verify = True
+                if data_rx_str.find(ser_message_start)==-1:
+                    ser_write_verify = True
     return ser_write_verify
 
 
@@ -256,6 +257,11 @@ def main_init(logger):
         send_ops24x_cmd("Send Reported Range Filter : ", "OD")
         send_ops24x_cmd("Send Reported Range Filter : ", "r>0")
         send_ops24x_cmd("Send Reported Range Filter : ", "r<0")
+        
+        send_ops24x_cmd("Send Reported Range Filter : ", "A?")
+        send_ops24x_cmd("Send Reported Range Filter : ", "??")
+        
+        
         
         #send_ops24x_cmd("Ask Module Information: ", OPS24X_INFO_QUERY_COMMAND)
         
