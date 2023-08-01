@@ -106,8 +106,7 @@ def send_ops24x_cmd(logging_prefix,ops24x_command):
             data_rx_str = str(data_rx_bytes)
             if data_rx_str.find(ser_message_start):
                 #logger.info(data_rx_str)
-                if data_rx_str.find(ser_message_start)==-1:
-                    ser_write_verify = True
+                ser_write_verify = True
     return ser_write_verify
 
 
