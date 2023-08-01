@@ -234,9 +234,10 @@ def main_init(logger):
         send_ops24x_cmd("Send Units Preference: ", OPS24X_UNITS_PREF)
         send_ops24x_cmd("Send Zeros Preference: ", OPS24X_BLANKS_PREF)
         send_ops24x_cmd("Send Force Instantaneous speeds: ", OPS24X_LIVE_SPEED)
-        send_ops24x_cmd("Send Directional Preference: ", OPS24X_BIDIRECTIONAL)
-        send_ops24x_cmd("Send Reported Range Filter : ", "r>0")
+        send_ops24x_cmd("Send Directional Preference: ", OPS24X_BIDIRECTIONAL)        
         send_ops24x_cmd("Send Reported Range Filter : ", "OD")
+        send_ops24x_cmd("Send Reported Range Filter : ", "r>0")
+        send_ops24x_cmd("Send Reported Range Filter : ", "r<0")
         
         
         time.sleep(5)
@@ -251,9 +252,10 @@ def main_init(logger):
         send_ops24x_cmd("Send Units Preference: ", OPS24X_UNITS_PREF)
         send_ops24x_cmd("Send Zeros Preference: ", OPS24X_BLANKS_PREF)
         send_ops24x_cmd("Send Force Instantaneous speeds: ", OPS24X_LIVE_SPEED)
-        send_ops24x_cmd("Send Directional Preference: ", OPS24X_BIDIRECTIONAL)
-        send_ops24x_cmd("Send Reported Range Filter : ", "r>0")
+        send_ops24x_cmd("Send Directional Preference: ", OPS24X_BIDIRECTIONAL)        
         send_ops24x_cmd("Send Reported Range Filter : ", "OD")
+        send_ops24x_cmd("Send Reported Range Filter : ", "r>0")
+        send_ops24x_cmd("Send Reported Range Filter : ", "r<0")
         
         #send_ops24x_cmd("Ask Module Information: ", OPS24X_INFO_QUERY_COMMAND)
         
