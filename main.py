@@ -127,7 +127,7 @@ def read_velocity(logger):
     # a case can be made that if the length is 0, it's a newline char so try again
     if ops24x_rx_bytes_length != 0:
         ops24x_rx_str = str.rstrip(str(ops24x_rx_bytes.decode('utf-8', 'strict')))# str(ops24x_rx_bytes)
-        logger.info("Lectura: " + ops24x_rx_str)
+        logger.error("Lectura: " + ops24x_rx_str)
         #print("lectura: ",ops24x_rx_str," bytes ",ops24x_rx_bytes)
         if ops24x_rx_str.find('{') == -1:  # really, { would only be found in first char            
             if (ops24x_rx_str.find(',')==-1):
