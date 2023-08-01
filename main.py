@@ -399,7 +399,7 @@ def main_loop(logger):
                 # upon consistent reading (>MIN_TRACK_TO_ACQUIRED_TIME, no direction change),  not-acq to acq
                 # upon change of direction   if new speed is allowed, acq to not-acq. if out, tracking=false
                 # alertafunciones.enviarmensaje(str(recent_velocity) + "|1")upon speed-out-of-range for more than an allowable time, tracking = false
-            if is_speed_in_allowed(recent_velocity):
+            if is_speed_in_allowed(recent_velocity,logger):
                 # logger.debug('look for direction changes. confirm prior_velocity = ', prior_velocity, 'recent_velocity = ', recent_velocity)
                 # The instant the direction changes, old tracking ends
 
